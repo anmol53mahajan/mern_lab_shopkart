@@ -44,15 +44,15 @@ app.use("/wishlist", wishlistRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 mongoose
   .connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/shopkart")
   .then(() => {
     console.log("Connected to MongoDB successfully");
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
   })
   .catch((err) => {
     console.error("Database connection failed:", err.message);
+    process.exit(1);
   });
