@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
 
@@ -31,7 +31,18 @@ const Login = ({ customer, setCustomer }) => {
         navigate("/products", { replace: true });
       }
     } catch (err) {
-      setError("Invalid Credentials");
+      const responseMessage = err.response?.data?.message;
+      if (responseMessage) {
+        setError(responseMessage);
+      } else if (err.response) {
+        setError(
+          `Login failed (HTTP ${err.response.status}). Check the backend response and API URL.`
+        );
+      } else {
+        setError(
+          "Could not reach the ShopKart API. Check that the backend is running and the API URL is correct."
+        );
+      }
     } finally {
       setLoading(false);
     }

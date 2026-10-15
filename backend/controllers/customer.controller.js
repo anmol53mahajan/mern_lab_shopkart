@@ -23,7 +23,8 @@ const registerCustomer = async (req, res) => {
 
 
     
-    const existingCustomer = await Customer.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingCustomer = await Customer.findOne({ email: normalizedEmail });
     if (existingCustomer) {
       return res.status(409).json({
         success: false,
@@ -33,7 +34,7 @@ const registerCustomer = async (req, res) => {
 
     const customer = await Customer.create({
       fullName,
-      email,
+      email: normalizedEmail,
       password,
       phone,
     });
@@ -69,7 +70,8 @@ const loginCustomer = async (req, res) => {
     }
 
 
-    const customer = await Customer.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+    const customer = await Customer.findOne({ email: normalizedEmail });
     if (!customer) {
 
       return res.status(401).json({

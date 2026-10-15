@@ -38,9 +38,18 @@ const Register = ({ customer }) => {
         navigate("/login");
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Registration failed. Please check inputs."
-      );
+      const responseMessage = err.response?.data?.message;
+      if (responseMessage) {
+        setError(responseMessage);
+      } else if (err.response) {
+        setError(
+          `Registration failed (HTTP ${err.response.status}). Check the backend response and API URL.`
+        );
+      } else {
+        setError(
+          "Could not reach the ShopKart API. Start the backend with `npm run dev`, or set VITE_API_URL to your deployed backend URL. For deployment, ensure CLIENT_URL matches this frontend's exact origin."
+        );
+      }
     } finally {
       setLoading(false);
     }
