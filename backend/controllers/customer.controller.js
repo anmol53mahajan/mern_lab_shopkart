@@ -116,9 +116,11 @@ const getProfile = async (req, res) => {
 
 
 const logoutCustomer = async (req, res) => {
-
+  const isProd = process.env.NODE_ENV === "production";
   res.cookie("token", "", {
     httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     expires: new Date(0),
   });
 

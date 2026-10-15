@@ -54,9 +54,10 @@ JWT_SECRET=replace_with_a_long_random_secret
 JWT_EXPIRES_IN=7d
 RAZORPAY_KEY_ID=your_razorpay_key_id
 RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+CLIENT_URL=http://localhost:5173
 ```
 
-`PORT`, `MONGO_URI`, and `JWT_EXPIRES_IN` have defaults in the application, but setting them explicitly makes the configuration clear. `JWT_SECRET` is required for authentication. Razorpay credentials are needed for payment order creation and verification; use Razorpay test credentials during development. Never commit your real `.env` file or publish payment secrets.
+`PORT`, `MONGO_URI`, and `JWT_EXPIRES_IN` have defaults in the application, but setting them explicitly makes the configuration clear. `JWT_SECRET` is required for authentication. `CLIENT_URL` is the frontend origin allowed by the backend for credentialed API requests. Razorpay credentials are needed for payment order creation and verification; use Razorpay test credentials during development. Never commit your real `.env` file or publish payment secrets.
 
 Start MongoDB before starting the backend. The configured database is named `shopkart`.
 
@@ -69,7 +70,7 @@ cd backend
 npm run dev
 ```
 
-The API listens on `http://localhost:5000` by default.
+The API listens on `http://localhost:5000` by default. For a deployment platform such as Render, set `NODE_ENV=production`, `CLIENT_URL` to the exact HTTPS origin of the deployed frontend, and the remaining backend environment variables in the platform's settings.
 
 ### 4. Start the frontend
 
@@ -80,7 +81,7 @@ cd frontend
 npm run dev
 ```
 
-Open the Vite URL printed in the terminal (normally `http://localhost:5173`). The frontend API client is configured for `http://localhost:5000`, and the backend currently allows credentialed requests from `http://localhost:5173`.
+Open the Vite URL printed in the terminal (normally `http://localhost:5173`). The frontend API client uses `http://localhost:5000` by default. To override it locally, create `frontend/.env.local` and set `VITE_API_URL=http://localhost:5000`. For a Vercel deployment, set `VITE_API_URL` to the backend's HTTPS URL in the Vercel project environment variables, then redeploy. `frontend/vercel.json` rewrites frontend routes to `index.html` so refreshing a client-side route works.
 
 ### 5. Add products
 
@@ -99,6 +100,7 @@ The product API expects a name, description, positive price, category, image URL
 | Command | Description |
 | --- | --- |
 | `npm run dev` | Run the API with Nodemon during development |
+| `npm start` | Start the API with Node.js (production/start command) |
 
 ### Frontend (`frontend/`)
 
